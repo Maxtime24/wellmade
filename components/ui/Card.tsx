@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 
 interface CardProps {
     title: string;
-    category: string;
     imageSrc: string;
     href: string;
     priority?: boolean;
@@ -15,7 +14,7 @@ interface CardProps {
     hideTitle?: boolean;
 }
 
-export default function Card({ title, category, imageSrc, href, priority = false, onClick, layoutId, hideTitle = false }: CardProps) {
+export default function Card({ title, imageSrc, href, priority = false, onClick, layoutId, hideTitle = false }: CardProps) {
     const Content = () => (
         <>
             <div className="relative w-full overflow-hidden bg-stone-100 dark:bg-stone-800 mb-3">
@@ -46,9 +45,6 @@ export default function Card({ title, category, imageSrc, href, priority = false
             </div>
             {!hideTitle && (
                 <div>
-                    <p className="text-xs font-semibold tracking-widest text-stone-500 uppercase">
-                        {category}
-                    </p>
                     <h3 className="mt-1 text-lg font-serif font-medium text-foreground group-hover:underline decoration-1 underline-offset-4">
                         {title}
                     </h3>
