@@ -30,6 +30,7 @@ export default function HorizontalScrollGallery() {
                         <div key={work.id} className="relative h-[60vh] w-[40vh] md:w-[23vw] shrink-0">
                             <Card
                                 title={work.title}
+                                category=""
                                 imageSrc={work.imageSrc}
                                 href="/work"
                             />
