@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Header from "@/components/Header";
@@ -36,7 +37,7 @@ export default function Home() {
               className="relative w-full h-full"
             >
               <Image
-                src="/hero.png"
+                src="/hero.jpg"
                 alt="Classical Sculpture Detail"
                 fill
                 className="object-cover object-center grayscale brightness-50 contrast-125"
@@ -52,7 +53,7 @@ export default function Home() {
                 transition={{ duration: 1, delay: 0.5 }}
                 className="text-5xl md:text-7xl lg:text-9xl font-serif font-bold tracking-tighter mb-6 text-shadow-sm"
               >
-                WELL MADE
+                WELLMADE
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -67,9 +68,21 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 1.5 }}
               >
-                <Button href="/work" variant="outline" className="border-white text-white hover:bg-white hover:text-black">
-                  포트폴리오 보기
-                </Button>
+                <div className="inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/30 rounded-full overflow-hidden transition-transform hover:scale-105 duration-300">
+                  <Link
+                    href="/work"
+                    className="px-8 py-4 text-white hover:bg-white/20 transition-colors font-medium tracking-wide flex items-center justify-center gap-2 group"
+                  >
+                    <span>포트폴리오</span>
+                  </Link>
+                  <div className="w-px h-5 bg-white/30"></div>
+                  <Link
+                    href="/contact"
+                    className="px-8 py-4 text-white hover:bg-white/20 transition-colors font-medium tracking-wide flex items-center justify-center gap-2 group"
+                  >
+                    <span>온라인 견적</span>
+                  </Link>
+                </div>
               </motion.div>
             </motion.div>
           </div>
@@ -87,7 +100,7 @@ export default function Home() {
                 최고의 장인정신을 추구하는 토탈 조형 기업입니다.
               </p>
               <p>
-                전시 모형부터 실내외 조형물, 놀이시설물 보수에 이르기까지<br className="hidden md:block" />
+                전시 모형부터 실내외 조형물, 문화유산 복원에 이르기까지<br className="hidden md:block" />
                 조형예술의 전 영역을 아우르며, 고객의 상상을 현실로 구현합니다.
               </p>
               <p>
@@ -130,7 +143,7 @@ export default function Home() {
         {/* Start Project CTA */}
         <section className="py-32 bg-stone-900 text-stone-100 text-center relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
-            <Image src="/hero.png" alt="Background" fill className="object-cover" />
+            <Image src="/hero.jpg" alt="Background" fill className="object-cover" />
           </div>
           <div className="relative z-10 container mx-auto px-6">
             <ScrollReveal>
@@ -141,8 +154,8 @@ export default function Home() {
                 여러분의 상상력을 현실로 만들어드립니다.<br />
                 지금 바로 프로젝트를 시작해보세요.
               </p>
-              <Button href="/about" variant="outline" className="border-white text-white hover:bg-white hover:text-black px-8 py-4 text-lg">
-                문의하기
+              <Button href="/contact" variant="outline" className="border-white text-white hover:bg-white hover:text-black px-8 py-4 text-lg">
+                고객문의
               </Button>
             </ScrollReveal>
           </div>

@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion, useTransform, useScroll } from "framer-motion";
 import Card from "@/components/ui/Card";
 
-import { WORKS } from "@/lib/data";
+import { SELECTED_WORKS } from "@/lib/selected_data";
 
 export default function HorizontalScrollGallery() {
     const targetRef = useRef<HTMLDivElement>(null);
@@ -26,11 +26,10 @@ export default function HorizontalScrollGallery() {
                             스크롤하여 작품을 감상하세요
                         </p>
                     </div>
-                    {WORKS.slice(0, 6).map((work) => (
-                        <div key={work.id} className="relative h-[60vh] w-[40vh] md:w-[25vw] shrink-0">
+                    {SELECTED_WORKS.slice(0, 6).map((work) => (
+                        <div key={work.id} className="relative h-[60vh] w-[40vh] md:w-[23vw] shrink-0">
                             <Card
                                 title={work.title}
-                                category={work.category}
                                 imageSrc={work.imageSrc}
                                 href="/work"
                             />

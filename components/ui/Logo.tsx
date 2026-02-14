@@ -4,7 +4,7 @@ export default function Logo({ className = "w-32 h-auto", color = "currentColor"
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 240 40"
+            viewBox="0 0 350 40"
             className={className}
             fill={color}
             aria-label="Well Made Logo"
@@ -20,9 +20,9 @@ export default function Logo({ className = "w-32 h-auto", color = "currentColor"
             />
             <rect x="5" y="5" width="40" height="30" stroke={color} strokeWidth="1.5" fill="none" />
 
-            {/* Text: WELL MADE */}
+            {/* Text: WELL MADE | 웰메이드 */}
             <text x="60" y="28" fontFamily="sans-serif" fontSize="20" fontWeight="600" letterSpacing="3" fill={color}>
-                WELL MADE
+                WELL MADE | 웰메이드
             </text>
         </svg>
     );

@@ -12,9 +12,9 @@ export default function Header() {
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-stone-200 dark:border-stone-800">
-            <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center justify-between px-6 py-6">
                 <Link href="/" className="hover:opacity-80 transition-opacity">
-                    <Logo className="w-28 md:w-36 h-auto text-foreground" />
+                    <Logo className="w-48 h-auto text-foreground" />
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -26,13 +26,18 @@ export default function Header() {
                             </Link>
                         </li>
                         <li>
-                            <Link href="/work" className="hover:text-foreground transition-colors">
-                                작품
+                            <Link href="/about" className="hover:text-foreground transition-colors">
+                                회사소개
                             </Link>
                         </li>
                         <li>
-                            <Link href="/about" className="hover:text-foreground transition-colors">
-                                소개
+                            <Link href="/work" className="hover:text-foreground transition-colors">
+                                포트폴리오
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/contact" className="hover:text-foreground transition-colors">
+                                고객 문의
                             </Link>
                         </li>
                     </ul>
@@ -61,11 +66,14 @@ export default function Header() {
                     <Link href="/" className="text-lg font-medium uppercase tracking-widest hover:text-stone-500" onClick={() => setIsMenuOpen(false)}>
                         홈
                     </Link>
-                    <Link href="/work" className="text-lg font-medium uppercase tracking-widest hover:text-stone-500" onClick={() => setIsMenuOpen(false)}>
-                        작품
-                    </Link>
                     <Link href="/about" className="text-lg font-medium uppercase tracking-widest hover:text-stone-500" onClick={() => setIsMenuOpen(false)}>
-                        소개
+                        회사소개
+                    </Link>
+                    <Link href="/work" className="text-lg font-medium uppercase tracking-widest hover:text-stone-500" onClick={() => setIsMenuOpen(false)}>
+                        포트폴리오
+                    </Link>
+                    <Link href="/contact" className="text-lg font-medium uppercase tracking-widest hover:text-stone-500" onClick={() => setIsMenuOpen(false)}>
+                        고객 문의
                     </Link>
                 </nav>
             </div>

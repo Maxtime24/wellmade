@@ -13,6 +13,14 @@ import { WORKS } from "@/lib/data";
 export default function WorkPage() {
     const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string; layoutId: string } | null>(null);
 
+    // 카테고리별로 작품 그룹화
+    const categories = [
+        { name: "금속", works: WORKS.filter(work => work.category === "금속") },
+        { name: "FRP", works: WORKS.filter(work => work.category === "FRP") },
+        { name: "스티로폼", works: WORKS.filter(work => work.category === "스티로폼") },
+        { name: "기타", works: WORKS.filter(work => work.category === "기타") },
+    ];
+
     return (
         <>
             <Header />
@@ -29,23 +37,34 @@ export default function WorkPage() {
                         </div>
                     </ScrollReveal>
 
-                    <div className="pt-8">
-                        <MasonryGrid>
-                            {WORKS.map((work, index) => (
-                                <ScrollReveal key={work.id} delay={index * 0.05}>
-                                    <Card
-                                        title={work.title}
-                                        category={work.category}
-                                        imageSrc={work.imageSrc}
-                                        href={`#`}
-                                        priority={index < 6}
-                                        onClick={() => setSelectedImage({ src: work.imageSrc, alt: work.title, layoutId: `work-${work.id}` })}
-                                        layoutId={`work-${work.id}`}
-                                    />
-                                </ScrollReveal>
-                            ))}
-                        </MasonryGrid>
-                    </div>
+                    {categories.map((category, categoryIndex) => (
+                        <div key={category.name} className="mb-20">
+                            <ScrollReveal>
+                                <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 dark:text-stone-100 mb-8 border-b-2 border-stone-200 dark:border-stone-800 pb-4">
+                                    {category.name}
+                                </h2>
+                            </ScrollReveal>
+
+                            <div className="pt-8">
+                                <MasonryGrid>
+                                    {category.works.map((work, index) => (
+                                        <ScrollReveal key={work.id} delay={index * 0.05}>
+                                            <Card
+                                                title={work.title}
+                                                category={work.category}
+                                                imageSrc={work.imageSrc}
+                                                href={`#`}
+                                                priority={categoryIndex === 0 && index < 6}
+                                                onClick={() => setSelectedImage({ src: work.imageSrc, alt: work.title, layoutId: `work-${work.id}` })}
+                                                layoutId={`work-${work.id}`}
+                                                hideTitle={true}
+                                            />
+                                        </ScrollReveal>
+                                    ))}
+                                </MasonryGrid>
+                            </div>
+                        </div>
+                    ))}
                 </SectionWrapper>
             </main>
             <Footer />
