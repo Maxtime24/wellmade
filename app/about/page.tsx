@@ -8,6 +8,7 @@ import SectionWrapper from "@/components/ui/SectionWrapper";
 import Button from "@/components/ui/Button";
 import TextReveal from "@/components/ui/TextReveal";
 import ParallaxImage from "@/components/ui/ParallaxImage";
+import CloudinaryUploadWidget from "@/components/ui/CloudinaryUploadWidget";
 
 const HISTORY = [
     { year: "2008", title: "시작", description: "고전적 정신을 현대적 형태로 재해석하겠다는 비전으로 작은 스튜디오에서 시작했습니다." },
@@ -27,20 +28,28 @@ export default function AboutPage() {
         message: ""
     });
 
+    const [uploadedFiles, setUploadedFiles] = useState<Array<{ name: string; url: string }>>([]);
+
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const subject = `[웰메이드 문의] ${formData.name}님의 문의`;
+
+        let filesSection = "";
+        if (uploadedFiles.length > 0) {
+            filesSection = `\n\n[첨부 파일 목록]\n${uploadedFiles.map((file, index) => `${index + 1}. ${file.name}\n${file.url}`).join('\n\n')}`;
+        }
+
         const body = `
 이름: ${formData.name}
 이메일: ${formData.email}
 전화번호: ${formData.phone}
 
 문의 내용:
-${formData.message}
+${formData.message}${filesSection}
         `.trim();
 
-        const mailtoLink = `mailto:k2nkim@hanmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        const mailtoLink = `mailto:k2nkim@daum.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
         window.location.href = mailtoLink;
     };
@@ -128,11 +137,11 @@ ${formData.message}
                                 </div>
 
                                 <div className="space-y-4">
-                                    <a href="mailto:k2nkim@hanmail.com" className="flex items-center gap-4 group cursor-pointer">
+                                    <a href="mailto:k2nkim@daum.net" className="flex items-center gap-4 group cursor-pointer">
                                         <div className="w-12 h-12 rounded-full border border-stone-700 flex items-center justify-center group-hover:bg-white group-hover:text-stone-900 transition-colors">
                                             <span>📧</span>
                                         </div>
-                                        <span className="text-lg">k2nkim@hanmail.com</span>
+                                        <span className="text-lg">k2nkim@daum.net</span>
                                     </a>
                                     <a href="tel:010-7742-5234" className="flex items-center gap-4 group cursor-pointer">
                                         <div className="w-12 h-12 rounded-full border border-stone-700 flex items-center justify-center group-hover:bg-white group-hover:text-stone-900 transition-colors">
@@ -206,13 +215,9 @@ ${formData.message}
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-stone-400 mb-2">첨부파일</label>
-                                    <input
-                                        type="file"
-                                        multiple
-                                        className="w-full bg-stone-900 border border-stone-700 rounded p-3 focus:border-white focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-white file:text-stone-900 hover:file:bg-stone-200 file:cursor-pointer"
-                                    />
-                                    <p className="text-xs text-stone-500 mt-2">참고 이미지나 도면을 첨부해주세요 (선택사항)</p>
+                                    <label className="block text-sm font-medium text-stone-400 mb-2">첨부파일 (대용량 파일 가능)</label>
+                                    <CloudinaryUploadWidget onUploadSuccess={setUploadedFiles} />
+                                    <p className="text-xs text-stone-500 mt-2">참고 이미지나 도면을 첨부해주세요 (최대 100MB, 5개까지)</p>
                                 </div>
 
                                 <Button type="submit" variant="primary" className="w-full bg-white text-black hover:bg-stone-200 py-4 font-bold text-lg">

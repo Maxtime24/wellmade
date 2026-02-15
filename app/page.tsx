@@ -38,7 +38,7 @@ export default function Home() {
             >
               <Image
                 src="/hero.jpg"
-                alt="Classical Sculpture Detail"
+                alt="웰메이드 조형물 제작 - 클래식 조각 디테일"
                 fill
                 className="object-cover object-center grayscale brightness-50 contrast-125"
                 priority
@@ -55,6 +55,7 @@ export default function Home() {
               >
                 WELLMADE
               </motion.h1>
+              <h2 className="sr-only">웰메이드 - 조형, 조각, 공간 예술 전문 기업</h2>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 0.9, y: 0 }}
@@ -72,6 +73,7 @@ export default function Home() {
                   <Link
                     href="/work"
                     className="px-8 py-4 text-white hover:bg-white/20 transition-colors font-medium tracking-wide flex items-center justify-center gap-2 group"
+                    aria-label="웰메이드 포트폴리오 보기"
                   >
                     <span>포트폴리오</span>
                   </Link>
@@ -79,6 +81,7 @@ export default function Home() {
                   <Link
                     href="/contact"
                     className="px-8 py-4 text-white hover:bg-white/20 transition-colors font-medium tracking-wide flex items-center justify-center gap-2 group"
+                    aria-label="온라인 견적 문의하기"
                   >
                     <span>온라인 견적</span>
                   </Link>
@@ -89,23 +92,23 @@ export default function Home() {
         </section>
 
         {/* Introduction Section */}
-        <SectionWrapper className="bg-stone-100 dark:bg-stone-900 text-center z-10 relative py-24">
+        <SectionWrapper className="bg-stone-100 dark:bg-stone-900 text-center z-10 relative py-24" id="intro">
           <ScrollReveal>
             <h2 className="text-3xl md:text-4xl font-serif font-medium mb-8 text-stone-800 dark:text-stone-200">
-              인사말
+              웰메이드 소개
             </h2>
             <div className="space-y-6 text-lg text-stone-600 dark:text-stone-400 leading-relaxed max-w-3xl mx-auto">
               <p>
                 <strong>웰메이드</strong>는 아름답고 따뜻한 세상을 만들어간다는 도전과 열정을 바탕으로<br className="hidden md:block" />
-                최고의 장인정신을 추구하는 토탈 조형 기업입니다.
+                최고의 장인정신을 추구하는 <strong>토탈 조형 기업</strong>입니다.
               </p>
               <p>
-                전시 모형부터 실내외 조형물, 문화유산 복원에 이르기까지<br className="hidden md:block" />
-                조형예술의 전 영역을 아우르며, 고객의 상상을 현실로 구현합니다.
+                전시 모형부터 실내외 조형물, <strong>문화유산 복원</strong>에 이르기까지<br className="hidden md:block" />
+                <strong>조형예술</strong>의 전 영역을 아우르며, 고객의 상상을 현실로 구현합니다.
               </p>
               <p>
                 기획, 디자인, 제작, 시공에 이르는 전 과정에 걸쳐<br className="hidden md:block" />
-                섬세한 조각 기법과 고도의 기술력으로 최고의 감동을 선사하겠습니다.
+                섬세한 <strong>조각</strong> 기법과 고도의 기술력으로 최고의 감동을 선사하겠습니다.
               </p>
             </div>
           </ScrollReveal>

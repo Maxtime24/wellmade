@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import Button from "@/components/ui/Button";
 import TextReveal from "@/components/ui/TextReveal";
+import CloudinaryUploadWidget from "@/components/ui/CloudinaryUploadWidget";
 
 export default function ContactPage() {
     const [formData, setFormData] = useState({
@@ -15,28 +16,54 @@ export default function ContactPage() {
         message: ""
     });
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const [uploadedFiles, setUploadedFiles] = useState<Array<{ name: string; url: string }>>([]);
+    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState<null | "success" | "error">(null);
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true);
+        setStatus(null);
 
-        const subject = `[웰메이드 문의] ${formData.name}님의 문의`;
-        const body = `
-이름: ${formData.name}
-이메일: ${formData.email}
-전화번호: ${formData.phone}
+        try {
+            const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    ...formData,
+                    files: uploadedFiles,
+                }),
+            });
 
-문의 내용:
-${formData.message}
-        `.trim();
+            if (!response.ok) {
+                throw new Error("메일 전송 실패");
+            }
 
-        const mailtoLink = `mailto:k2nkim@hanmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            setStatus("success");
+            setFormData({
+                name: "",
+                email: "",
+                phone: "",
+                message: "",
+            });
+            setUploadedFiles([]);
 
-        window.location.href = mailtoLink;
+        } catch (error) {
+            console.error(error);
+            setStatus("error");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
     };
 
@@ -64,11 +91,11 @@ ${formData.message}
                                 </div>
 
                                 <div className="space-y-4">
-                                    <a href="mailto:k2nkim@hanmail.com" className="flex items-center gap-4 group cursor-pointer">
+                                    <a href="mailto:k2nkim@daum.net" className="flex items-center gap-4 group cursor-pointer">
                                         <div className="w-12 h-12 rounded-full border border-stone-700 flex items-center justify-center group-hover:bg-white group-hover:text-stone-900 transition-colors">
                                             <span>📧</span>
                                         </div>
-                                        <span className="text-lg">k2nkim@hanmail.com</span>
+                                        <span className="text-lg">k2nkim@daum.net</span>
                                     </a>
                                     <a href="tel:010-7742-5234" className="flex items-center gap-4 group cursor-pointer">
                                         <div className="w-12 h-12 rounded-full border border-stone-700 flex items-center justify-center group-hover:bg-white group-hover:text-stone-900 transition-colors">
@@ -86,74 +113,74 @@ ${formData.message}
                             </div>
                         </div>
 
-                        <div className="bg-stone-800 p-8 md:p-12 rounded-lg shadow-2xl">
+                       <div className="bg-stone-800 p-8 md:p-12 rounded-lg shadow-2xl">
                             <h2 className="text-2xl font-serif font-bold mb-6">문의하기</h2>
+
                             <form className="space-y-6" onSubmit={handleSubmit}>
-                                <div>
-                                    <label className="block text-sm font-medium text-stone-400 mb-2">이름 *</label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        required
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        className="w-full bg-stone-900 border border-stone-700 rounded p-3 focus:border-white focus:outline-none transition-colors"
-                                        placeholder="홍길동"
-                                    />
-                                </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-stone-400 mb-2">이메일 *</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        required
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        className="w-full bg-stone-900 border border-stone-700 rounded p-3 focus:border-white focus:outline-none transition-colors"
-                                        placeholder="your@email.com"
-                                    />
-                                </div>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    required
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className="w-full bg-stone-900 border border-stone-700 rounded p-3"
+                                    placeholder="이름"
+                                />
 
-                                <div>
-                                    <label className="block text-sm font-medium text-stone-400 mb-2">전화번호 *</label>
-                                    <input
-                                        type="tel"
-                                        name="phone"
-                                        required
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        className="w-full bg-stone-900 border border-stone-700 rounded p-3 focus:border-white focus:outline-none transition-colors"
-                                        placeholder="010-0000-0000"
-                                    />
-                                </div>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    required
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className="w-full bg-stone-900 border border-stone-700 rounded p-3"
+                                    placeholder="이메일"
+                                />
 
-                                <div>
-                                    <label className="block text-sm font-medium text-stone-400 mb-2">문의 내용 *</label>
-                                    <textarea
-                                        rows={6}
-                                        name="message"
-                                        required
-                                        value={formData.message}
-                                        onChange={handleChange}
-                                        className="w-full bg-stone-900 border border-stone-700 rounded p-3 focus:border-white focus:outline-none transition-colors resize-none"
-                                        placeholder="프로젝트의 예산, 일정, 규모 등에 대해 자세히 알려주세요."
-                                    ></textarea>
-                                </div>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    required
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    className="w-full bg-stone-900 border border-stone-700 rounded p-3"
+                                    placeholder="전화번호"
+                                />
 
-                                <div>
-                                    <label className="block text-sm font-medium text-stone-400 mb-2">첨부파일</label>
-                                    <input
-                                        type="file"
-                                        multiple
-                                        className="w-full bg-stone-900 border border-stone-700 rounded p-3 focus:border-white focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-white file:text-stone-900 hover:file:bg-stone-200 file:cursor-pointer"
-                                    />
-                                    <p className="text-xs text-stone-500 mt-2">참고 이미지나 도면을 첨부해주세요 (선택사항)</p>
-                                </div>
+                                <textarea
+                                    rows={6}
+                                    name="message"
+                                    required
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    className="w-full bg-stone-900 border border-stone-700 rounded p-3 resize-none"
+                                    placeholder="문의 내용을 입력하세요"
+                                />
 
-                                <Button type="submit" variant="primary" className="w-full bg-white text-black hover:bg-stone-200 py-4 font-bold text-lg">
-                                    문의 보내기
+                                <CloudinaryUploadWidget onUploadSuccess={setUploadedFiles} />
+
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    className="w-full bg-white text-black py-4 font-bold text-lg"
+                                    disabled={loading}
+                                >
+                                    {loading ? "전송 중..." : "문의 보내기"}
                                 </Button>
+
+                                {status === "success" && (
+                                    <p className="text-green-400 text-sm">
+                                        문의가 정상적으로 전송되었습니다.
+                                    </p>
+                                )}
+
+                                {status === "error" && (
+                                    <p className="text-red-400 text-sm">
+                                        메일 전송에 실패했습니다. 다시 시도해주세요.
+                                    </p>
+                                )}
+
                             </form>
                         </div>
                     </div>
