@@ -30,12 +30,12 @@ export default function AboutPage() {
 
     const [uploadedFiles, setUploadedFiles] = useState<Array<{ name: string; url: string }>>([]);
     const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState<null | "success" | "error">(null);
+    const [status, setStatus] = useState<{ type: "success" | "error" | null, message?: string }>({ type: null });
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
-        setStatus(null);
+        setStatus({ type: null });
 
         try {
             const response = await fetch("/api/contact", {
@@ -49,11 +49,13 @@ export default function AboutPage() {
                 }),
             });
 
+            const result = await response.json();
+
             if (!response.ok) {
-                throw new Error("메일 전송 실패");
+                throw new Error(result.detail || result.error || "메일 전송 실패");
             }
 
-            setStatus("success");
+            setStatus({ type: "success" });
             setFormData({
                 name: "",
                 email: "",
@@ -62,9 +64,9 @@ export default function AboutPage() {
             });
             setUploadedFiles([]);
 
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            setStatus("error");
+            setStatus({ type: "error", message: error.message });
         } finally {
             setLoading(false);
         }
@@ -245,15 +247,15 @@ export default function AboutPage() {
                                     {loading ? "전송 중..." : "문의 보내기"}
                                 </Button>
 
-                                {status === "success" && (
+                                {status.type === "success" && (
                                     <p className="text-green-400 text-sm">
                                         문의가 정상적으로 전송되었습니다.
                                     </p>
                                 )}
 
-                                {status === "error" && (
+                                {status.type === "error" && (
                                     <p className="text-red-400 text-sm">
-                                        메일 전송에 실패했습니다. 다시 시도해주세요.
+                                        {status.message || "메일 전송에 실패했습니다. 다시 시도해주세요."}
                                     </p>
                                 )}
                             </form>

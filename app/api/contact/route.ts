@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-// Nodemailer 트랜스포터 생성 (Gmail SMTP)
+// Nodemailer 트랜스포터 생성 (더 안정적인 설정을 위해 explicit host/port 사용)
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // 587 포트는 false (STARTTLS)
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
@@ -12,6 +14,20 @@ const transporter = nodemailer.createTransport({
 
 export async function POST(req: Request) {
   try {
+    // 환경 변수 검증 (Vercel 설정 확인용)
+    const { GMAIL_USER, GMAIL_APP_PASSWORD, EMAIL_TO } = process.env;
+
+    if (!GMAIL_USER || !GMAIL_APP_PASSWORD || !EMAIL_TO) {
+      console.error("CRITICAL ERROR: Missing environment variables for email.");
+      return NextResponse.json(
+        {
+          error: "서버 설정 오류 (환경 변수 누락)",
+          detail: "Vercel 대시보드에서 GMAIL_USER, GMAIL_APP_PASSWORD, EMAIL_TO를 설정했는지 확인해주세요."
+        },
+        { status: 500 }
+      );
+    }
+
     const body = await req.json();
     const { name, email, phone, message, files } = body;
 
@@ -65,12 +81,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true });
 
   } catch (error: any) {
-    console.error("MAIL ERROR:", error);
+    // Vercel 로그에서 상세 에러를 볼 수 있도록 전체 에러 객체 출력
+    console.error("FULL MAIL ERROR:", error);
 
     return NextResponse.json(
       {
         error: "메일 전송 실패",
         detail: error.message || "Unknown error",
+        stack: process.env.NODE_ENV === "development" ? error.stack : undefined
       },
       { status: 500 }
     );
