@@ -20,7 +20,7 @@ export default function CustomCursor() {
 
     return (
         <motion.div
-            className="fixed top-0 left-0 w-8 h-8 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
+            className="fixed top-0 left-0 w-8 h-8 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference hidden md:block"
             animate={{ x: mousePosition.x - 16, y: mousePosition.y - 16 }}
             transition={{ type: "spring", stiffness: 500, damping: 28 }}
         />

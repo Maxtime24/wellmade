@@ -1,15 +1,12 @@
 import { NextResponse } from "next/server";
-import {
-  SESClient,
-  SendEmailCommand,
-} from "@aws-sdk/client-ses";
+import nodemailer from "nodemailer";
 
-// SES 클라이언트 생성
-const client = new SESClient({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+// Nodemailer 트랜스포터 생성 (Gmail SMTP)
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
   },
 });
 
@@ -53,34 +50,22 @@ export async function POST(req: Request) {
       ${filesHtml}
     `;
 
-    // 4️⃣ SES 명령 생성
-    const command = new SendEmailCommand({
-      Source: process.env.SES_FROM_EMAIL!,
-      Destination: {
-        ToAddresses: [process.env.SES_TO_EMAIL!],
-      },
-      Message: {
-        Subject: {
-          Data: `[웰메이드 문의] ${name}님의 문의`,
-          Charset: "UTF-8",
-        },
-        Body: {
-          Html: {
-            Data: htmlContent,
-            Charset: "UTF-8",
-          },
-        },
-      },
-      ReplyToAddresses: [email],
-    });
+    // 4️⃣ 이메일 옵션 설정
+    const mailOptions = {
+      from: process.env.GMAIL_USER,
+      to: process.env.EMAIL_TO,
+      subject: `[웰메이드 문의] ${name}님의 문의`,
+      html: htmlContent,
+      replyTo: email,
+    };
 
     // 5️⃣ 발송
-    await client.send(command);
+    await transporter.sendMail(mailOptions);
 
     return NextResponse.json({ success: true });
 
   } catch (error: any) {
-    console.error("SES ERROR:", error);
+    console.error("MAIL ERROR:", error);
 
     return NextResponse.json(
       {

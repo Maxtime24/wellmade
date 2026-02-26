@@ -29,29 +29,45 @@ export default function AboutPage() {
     });
 
     const [uploadedFiles, setUploadedFiles] = useState<Array<{ name: string; url: string }>>([]);
+    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState<null | "success" | "error">(null);
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true);
+        setStatus(null);
 
-        const subject = `[웰메이드 문의] ${formData.name}님의 문의`;
+        try {
+            const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    ...formData,
+                    files: uploadedFiles,
+                }),
+            });
 
-        let filesSection = "";
-        if (uploadedFiles.length > 0) {
-            filesSection = `\n\n[첨부 파일 목록]\n${uploadedFiles.map((file, index) => `${index + 1}. ${file.name}\n${file.url}`).join('\n\n')}`;
+            if (!response.ok) {
+                throw new Error("메일 전송 실패");
+            }
+
+            setStatus("success");
+            setFormData({
+                name: "",
+                email: "",
+                phone: "",
+                message: "",
+            });
+            setUploadedFiles([]);
+
+        } catch (error) {
+            console.error(error);
+            setStatus("error");
+        } finally {
+            setLoading(false);
         }
-
-        const body = `
-이름: ${formData.name}
-이메일: ${formData.email}
-전화번호: ${formData.phone}
-
-문의 내용:
-${formData.message}${filesSection}
-        `.trim();
-
-        const mailtoLink = `mailto:k2nkim@daum.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-        window.location.href = mailtoLink;
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -220,9 +236,26 @@ ${formData.message}${filesSection}
                                     <p className="text-xs text-stone-500 mt-2">참고 이미지나 도면을 첨부해주세요 (최대 100MB, 5개까지)</p>
                                 </div>
 
-                                <Button type="submit" variant="primary" className="w-full bg-white text-black hover:bg-stone-200 py-4 font-bold text-lg">
-                                    문의 보내기
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    className="w-full bg-white text-black hover:bg-stone-200 py-4 font-bold text-lg"
+                                    disabled={loading}
+                                >
+                                    {loading ? "전송 중..." : "문의 보내기"}
                                 </Button>
+
+                                {status === "success" && (
+                                    <p className="text-green-400 text-sm">
+                                        문의가 정상적으로 전송되었습니다.
+                                    </p>
+                                )}
+
+                                {status === "error" && (
+                                    <p className="text-red-400 text-sm">
+                                        메일 전송에 실패했습니다. 다시 시도해주세요.
+                                    </p>
+                                )}
                             </form>
                         </div>
                     </div>
