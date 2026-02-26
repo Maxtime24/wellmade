@@ -43,13 +43,22 @@ export async function POST(req: Request) {
     let filesHtml = "";
     if (files && Array.isArray(files) && files.length > 0) {
       filesHtml = `
-        <h3>첨부파일</h3>
-        ${files
+        <div style="margin-top: 20px; padding: 15px; background-color: #f4f4f4; border-radius: 5px;">
+          <h3 style="margin-top: 0;">첨부파일</h3>
+          ${files
           .map(
-            (file: any, index: number) =>
-              `<p>${index + 1}. <a href="${file.url}" target="_blank">${file.name}</a></p>`
+            (file: any, index: number) => {
+              const cleanUrl = String(file.url).trim();
+              return `
+                  <p style="margin: 5px 0;">
+                    ${index + 1}. <strong>${file.name}</strong><br/>
+                    <a href="${cleanUrl}" target="_blank" style="color: #0066cc; text-decoration: underline;">파일 보기</a>
+                    <span style="color: #888; font-size: 12px; margin-left: 10px;">(${cleanUrl})</span>
+                  </p>`;
+            }
           )
           .join("")}
+        </div>
       `;
     }
 
